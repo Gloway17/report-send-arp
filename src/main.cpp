@@ -120,17 +120,20 @@ void send_arp_request(pcap_t* handle, const char* dev, const char* ip) {
 	}
 }
 
-char* receive_arp_response() {
+char* receive_arp_response(pcap_t* handle) {
+	struct pcap_pkthdr* header;
+	const u_char* packet;
+	EthArpPacket *eth_arp;
+
 	while (true) {
-		struct pcap_pkthdr* header;
+		int res = pcap_next_ex(handle, &header, &packet);
 
-		const u_char* packet;
-		int res = pcap_next_ex(pcap, &header, &packet);
-
-		EthArpPacket *eth_arp = (EthArpPacket eth_arp*)packet;
-		if (EthArpPacket.)
-
+		eth_arp = (EthArpPacket *)packet;
+		if (eth_arp->eth_.type_ != 0x0806)
+			continue;
+		break;
 	}
+	return eth_arp->arp_.smac_.toCharArray();
 }
 
 int main(int argc, char* argv[]) {
@@ -157,7 +160,7 @@ int main(int argc, char* argv[]) {
 	send_arp_request(pcap_t* handle, argv[1], argv[2])
 	char target_mac[] = receive_arp_response()
 
-	EthArpPacket packet;
+	EthArpPacket *packet;
 
 	packet.eth_.dmac_ = Mac("FF:FF:FF:FF:FF:FF");
 	packet.eth_.smac_ = Mac("00:00:00:00:00:00");
